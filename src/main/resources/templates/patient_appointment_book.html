@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Đặt lịch khám</title>
+
+    <meta charset="utf-8">
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <style>
+
+        body{
+            background:#f5f7fb;
+        }
+
+        .doctor-card{
+            border-radius:15px;
+            overflow:hidden;
+            box-shadow:0 4px 10px rgba(0,0,0,.1);
+            margin-bottom:25px;
+        }
+
+        .doctor-card img{
+            height:220px;
+            object-fit:cover;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container mt-5">
+
+    <a th:href="@{/patient/home}"
+       class="btn btn-secondary mb-4">
+
+        ← Quay lại
+    </a>
+
+    <h3 class="text-center mb-4">
+        📅 Đặt lịch khám
+    </h3>
+
+    <div class="row">
+
+        <div class="col-md-4"
+             th:each="d : ${doctors}">
+
+            <div class="card doctor-card">
+
+                <img class="card-img-top"
+                     src="https://cdn-icons-png.flaticon.com/512/3774/3774299.png">
+
+                <div class="card-body">
+
+                    <h5 th:text="${d.user.username}">
+                        Bác sĩ
+                    </h5>
+
+                    <p class="text-muted"
+                       th:text="${d.specialty.name}">
+                    </p>
+
+                    <p th:text="${d.description}">
+                    </p>
+
+                    <a th:href="@{/patient/book/add/{id}(id=${d.id})}"
+                       class="btn btn-primary">
+
+                        Đặt lịch
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

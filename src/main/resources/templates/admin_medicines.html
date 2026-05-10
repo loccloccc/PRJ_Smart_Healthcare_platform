@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <title>Quản lý danh mục thuốc - Admin</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          crossorigin="anonymous">
+</head>
+<body>
+<div class="container mt-4">
+    <h3 class="text-primary mb-4"><i class="fas fa-capsules"></i> Quản lý danh mục thuốc</h3>
+    <div class="mb-3 d-flex justify-content-between">
+        <a th:href="@{/admin/home}"
+           class="btn btn-secondary">
+
+            <i class="fas fa-arrow-left"></i>
+            Quay lại
+
+        </a>
+        <a th:href="@{/admin/addMedicine}"
+           class="btn btn-primary">
+
+            <i class="fas fa-plus"></i>
+            Thêm thuốc mới
+
+        </a>
+
+    </div>
+
+
+
+    <!-- Bảng danh sách thuốc -->
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light">
+        <tr>
+            <th>ID</th>
+            <th>Tên thuốc</th>
+            <th>Số lượng</th>
+            <th>Đơn vị</th>
+            <th>Giá</th>
+            <th>Mô tả</th>
+            <th>Thao tác</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="med , start: ${medicines}">
+            <td th:text="${start.count}"></td>
+            <td th:text="${med.name}"></td>
+            <td th:text="${med.stock}"></td>
+            <td th:text="${med.unit}"></td>
+            <td th:text="${med.price}"></td>
+            <td th:text="${med.description}"></td>
+            <td>
+                <a th:href="@{/admin/editMedicine/{id}(id=${med.id})}" class="btn btn-warning btn-sm">
+                    <i class="fas fa-edit"></i> Sửa
+                </a>
+                <a th:href="@{/admin/deleteMedicine/{id}(id=${med.id})}" class="btn btn-danger btn-sm"
+                    onclick="return confirm('Bạn chắc chắn muốn xóa không ?')"
+                >
+                    <i class="fas fa-trash"></i> Xóa
+                </a>
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+</div>
+
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

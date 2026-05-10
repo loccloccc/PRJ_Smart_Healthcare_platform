@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="header">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+        <!-- LOGO -->
+
+        <a th:if="${userLogin != null and userLogin.role == 'DOCTOR'}"
+           class="navbar-brand"
+           th:href="@{/doctor/home}">
+
+            MedCare
+
+        </a>
+
+        <a th:if="${userLogin != null and userLogin.role == 'ADMIN'}"
+           class="navbar-brand"
+           th:href="@{/admin/home}">
+
+            MedCare
+
+        </a>
+
+        <a th:if="${userLogin != null and userLogin.role == 'PATIENT'}"
+           class="navbar-brand"
+           th:href="@{/patient/home}">
+
+            MedCare
+
+        </a>
+
+        <!-- MENU RIGHT -->
+
+        <div class="ml-auto d-flex align-items-center">
+
+            <!-- ADMIN -->
+
+            <a th:if="${userLogin != null and userLogin.role == 'ADMIN'}"
+               th:href="@{/admin/profile}"
+               class="btn btn-light btn-sm mr-2">
+
+                Hồ sơ Admin
+
+            </a>
+
+            <!-- DOCTOR -->
+
+            <a th:if="${userLogin != null and userLogin.role == 'DOCTOR'}"
+               th:href="@{/doctor/profile}"
+               class="btn btn-light btn-sm mr-2">
+
+                Hồ sơ Bác sĩ
+
+            </a>
+
+            <!-- PATIENT -->
+
+            <a th:if="${userLogin != null and userLogin.role == 'PATIENT'}"
+               th:href="@{/patient/profile}"
+               class="btn btn-light btn-sm mr-2">
+
+                Hồ sơ Bệnh nhân
+
+            </a>
+
+            <!-- LOGOUT -->
+
+            <a th:if="${userLogin != null}"
+               th:href="@{/logout}"
+               class="btn btn-light btn-sm">
+
+                Đăng xuất
+
+            </a>
+
+        </div>
+
+    </nav>
+
+</div>
+
+</body>
+</html>

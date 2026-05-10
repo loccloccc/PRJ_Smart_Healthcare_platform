@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>Trang chủ bác sĩ - MedCare</title>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+
+        body {
+            background-color: #f9fafc;
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container{
+            flex: 1;
+        }
+
+        .summary-box {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .summary-box h4 {
+            color: #0c56d0;
+            font-weight: 700;
+        }
+
+        .section-title {
+            color: #0c56d0;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .appointment-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .btn-new {
+            background-color: #0c56d0;
+            color: #fff;
+            border-radius: 25px;
+            font-weight: 600;
+        }
+
+        .btn-new:hover {
+            background-color: #0945a8;
+            color: #fff;
+        }
+
+        .btn-receive {
+            background-color: #28a745;
+            color: white;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4>
+                Chào bác sĩ
+                <span th:text="${userLogin.username}"></span>
+            </h4>
+
+            <p class="text-muted">
+                Hôm nay:
+                <span th:text="${today}"></span>
+            </p>
+
+        </div>
+
+        <a th:href="@{/doctor/patients}"
+           class="btn btn-new">
+
+            📅 Xem lịch khám
+
+        </a>
+
+    </div>
+
+    <!-- thống kê -->
+    <div class="row mb-4">
+
+        <div class="col-md-3">
+            <div class="summary-box">
+                <i class="fas fa-user-md fa-2x text-primary mb-2"></i>
+                <h4 th:text="${appointments.size()}">0</h4>
+                <p>Bệnh nhân hôm nay</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="summary-box">
+                <i class="fas fa-calendar-check fa-2x text-success mb-2"></i>
+                <h4 th:text="${pendingAppointments}">0</h4>
+                <p>Lịch chờ khám</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="summary-box">
+                <i class="fas fa-exclamation-triangle fa-2x text-warning mb-2"></i>
+                <h4 th:text="${urgentTasks}">0</h4>
+                <p>Khẩn cấp</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="summary-box">
+                <i class="fas fa-check-circle fa-2x text-info mb-2"></i>
+                <h4 th:text="${completedTasks}">0</h4>
+                <p>Đã hoàn thành</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- lịch khám -->
+    <h5 class="section-title">📅 Lịch khám hôm nay</h5>
+
+    <div th:if="${#lists.isEmpty(appointments)}"
+         class="alert alert-info">
+
+        Hôm nay chưa có lịch khám.
+
+    </div>
+
+    <div th:each="appt : ${appointments}"
+         class="appointment-card">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h6 th:text="${appt.patient.username}">
+                    Patient
+                </h6>
+
+                <p class="text-muted"
+                   th:text="${appt.note != null ? appt.note : 'Không có ghi chú'}">
+                </p>
+
+                <small class="text-muted">
+
+                    🕒
+
+                    <span th:text="${#temporals.format(
+                        appt.appointmentTime,
+                        'HH:mm dd/MM/yyyy'
+                    )}">
+                    </span>
+
+                </small>
+
+            </div>
+
+            <div>
+
+                <span class="badge badge-primary mb-2"
+                      th:text="${appt.status}">
+                </span>
+
+                <br>
+
+                <a th:href="@{/doctor/diagnosis/{id}(id=${appt.id})}"
+                   class="btn btn-receive btn-sm">
+
+                    Tiếp nhận
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

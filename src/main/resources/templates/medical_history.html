@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lịch sử bệnh án - MedCare</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          crossorigin="anonymous">
+
+    <style>
+        body {
+            background-color: #f9fafc;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .record-card {
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+            overflow: hidden;
+            border: none;
+        }
+
+        .record-header {
+            background-color: #0c56d0;
+            color: #fff;
+            padding: 15px 20px;
+        }
+
+        .record-body {
+            padding: 20px;
+        }
+
+        .medicine-list {
+            padding-left: 20px;
+        }
+
+        .empty-box {
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        .btn-back {
+            background-color: #0c56d0;
+            color: white;
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .btn-back:hover {
+            background-color: #0945a8;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container mt-5">
+
+    <div class="mb-3">
+        <a th:href="@{/patient/home}" class="btn btn-back">
+            ← Quay lại trang chủ
+        </a>
+    </div>
+
+    <h3 class="mb-4 text-center" style="color:#0c56d0;">
+        🩺 Lịch sử bệnh án
+    </h3>
+
+    <!-- Không có bệnh án -->
+    <div th:if="${#lists.isEmpty(medicalRecords)}"
+         class="alert alert-info text-center empty-box">
+
+        Chưa có bệnh án nào được ghi nhận.
+
+    </div>
+
+    <!-- CHỈ HIỂN THỊ RECORD ĐÃ HOÀN THÀNH -->
+    <div th:each="rec : ${medicalRecords}"
+         th:if="${rec.appointment.status == 'COMPLETED'}"
+         class="card record-card">
+
+        <!-- Header -->
+        <div class="record-header">
+            <h5>
+                Chẩn đoán:
+                <span th:text="${rec.diagnosis}">
+                    Viêm họng
+                </span>
+            </h5>
+        </div>
+
+        <!-- Body -->
+        <div class="record-body">
+
+            <p>
+                <strong>Bác sĩ phụ trách:</strong>
+                <span th:text="${rec.appointment.doctor.user.username}">
+                    Nguyễn Văn A
+                </span>
+            </p>
+
+            <p>
+                <strong>Chuyên khoa:</strong>
+                <span th:text="${rec.appointment.doctor.specialty.name}">
+                    Tim mạch
+                </span>
+            </p>
+
+            <p>
+                <strong>Ngày khám:</strong>
+                <span th:text="${#temporals.format(rec.createdAt,'dd/MM/yyyy HH:mm')}">
+                    08/05/2026
+                </span>
+            </p>
+
+            <p>
+                <strong>Triệu chứng:</strong>
+                <span th:text="${rec.symptoms}">
+                    Ho, sốt
+                </span>
+            </p>
+
+            <p>
+                <strong>Kết quả:</strong>
+                <span th:text="${rec.result}">
+                    Viêm họng cấp
+                </span>
+            </p>
+
+            <!-- Đơn thuốc -->
+            <div>
+                <strong>Đơn thuốc:</strong>
+
+                <div th:if="${rec.prescription != null}">
+
+                    <ul class="medicine-list"
+                        th:if="${!#lists.isEmpty(rec.prescription.details)}">
+
+                        <li th:each="d : ${rec.prescription.details}">
+                            <span th:text="${d.medicine.name}"></span>
+                            -
+                            <span th:text="${d.quantity}"></span>
+                            viên
+                        </li>
+
+                    </ul>
+
+                    <div th:if="${#lists.isEmpty(rec.prescription.details)}">
+                        Chưa có thuốc trong đơn.
+                    </div>
+
+                </div>
+
+                <div th:if="${rec.prescription == null}">
+                    Chưa có đơn thuốc.
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

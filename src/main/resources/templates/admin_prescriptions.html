@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <title>Duyệt đơn thuốc - Admin</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          crossorigin="anonymous">
+</head>
+<body>
+<div class="container mt-4">
+    <h3 class="text-primary mb-4"><i class="fas fa-file-prescription"></i> Duyệt đơn thuốc</h3>
+
+    <!-- Bảng danh sách đơn thuốc chờ duyệt -->
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light">
+        <tr>
+            <th>ID</th>
+            <th>Bệnh nhân</th>
+            <th>Bác sĩ kê đơn</th>
+            <th>Thuốc</th>
+            <th>Liều lượng</th>
+            <th>Hướng dẫn</th>
+            <th>Ngày kê</th>
+            <th>Thao tác</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="pres : ${pendingPrescriptions}">
+            <td th:text="${pres.id}">101</td>
+            <td th:text="${pres.patientName}">Nguyễn Văn B</td>
+            <td th:text="${pres.doctorName}">BS. Trần Văn A</td>
+            <td th:text="${pres.medicine}">Omeprazole</td>
+            <td th:text="${pres.dosage}">20mg</td>
+            <td th:text="${pres.instructions}">Uống sáng trước ăn</td>
+            <td th:text="${#dates.format(pres.createdAt, 'dd/MM/yyyy')}">07/05/2026</td>
+            <td>
+                <form th:action="@{/admin/approvePrescription}" method="post" style="display:inline;">
+                    <input type="hidden" name="id" th:value="${pres.id}">
+                    <button type="submit" class="btn btn-success btn-sm">
+                        <i class="fas fa-check"></i> Duyệt
+                    </button>
+                </form>
+                <form th:action="@{/admin/rejectPrescription}" method="post" style="display:inline;">
+                    <input type="hidden" name="id" th:value="${pres.id}">
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        <i class="fas fa-times"></i> Từ chối
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

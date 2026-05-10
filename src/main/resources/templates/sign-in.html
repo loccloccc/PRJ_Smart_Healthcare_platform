@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Đăng ký MedCare</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          crossorigin="anonymous">
+    <style>
+        body {
+            background: #ffffff; /* nền trắng */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;   /* căn giữa theo chiều dọc */
+            justify-content: center; /* căn giữa theo chiều ngang */
+        }
+        .error{
+            color: red;
+        }
+        .main-box {
+            width: 100%;
+            max-width: 1100px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        .title {
+            color: #0c56d0;
+            font-weight: bold;
+            word-break: keep-all;
+        }
+        .btn-custom {
+            border-radius: 25px;
+            font-weight: 600;
+            background-color: #0c56d0; /* màu xanh theo yêu cầu */
+            color: #fff;
+            border: none;
+        }
+        .btn-custom:hover {
+            background-color: #0945a8;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<div class="main-box row no-gutters">
+    <!-- LEFT -->
+    <div class="col-md-5 p-5 bg-light">
+        <h3 class="title">Chăm sóc sức khỏe số,<br>khởi đầu từ sự tin cậy.</h3>
+        <p class="text-muted mt-3">
+            Tham gia cộng đồng MedCare Digital để trải nghiệm dịch vụ quản lý y tế cá nhân hóa, nhanh chóng và an toàn tuyệt đối.
+        </p>
+        <div class="mt-4">
+            <p><b>🔒 Bảo mật tuyệt đối</b></p>
+            <small class="text-muted">Dữ liệu y tế của bạn được mã hóa chuẩn quốc tế.</small>
+        </div>
+        <div class="mt-3">
+            <p><b>⚡ Kết nối nhanh chóng</b></p>
+            <small class="text-muted">Gặp bác sĩ chuyên khoa chỉ trong vài lần chạm.</small>
+        </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="col-md-7 p-5">
+        <h3 class="text-center title mb-4">📝 Tạo tài khoản</h3>
+        <form th:action="@{/handleRegister}"
+              th:object="${userDTO}"
+              method="post">
+            <div class="form-group">
+                <label>Họ và tên</label>
+                <input type="text"
+                       th:field="*{username}"
+                       class="form-control"
+                       placeholder="Nguyễn Văn A">
+
+                <p class="error" th:if="${#fields.hasErrors('username')}"
+                       th:errors="*{username}"></p>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email"
+                       th:field="*{email}"
+                       class="form-control"
+                       placeholder="example@gmail.com">
+
+                <small class="error" th:if="${#fields.hasErrors('email')}"
+                       th:errors="*{email}"></small>
+
+                <small class="error" th:if="${#fields.hasErrors('email')}"
+                       th:text="${emailExists}"></small>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Mật khẩu</label>
+                    <input type="password"
+                           th:field="*{password}"
+                           class="form-control">
+
+                    <small class="error" th:if="${#fields.hasErrors('password')}"
+                           th:errors="*{password}"></small>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Xác nhận mật khẩu</label>
+                    <input type="password"
+                           th:field="*{confirmPassword}"
+                           class="form-control">
+
+                    <small class="error" th:if="${#fields.hasErrors('confirmPassword')}"
+                           th:text="${passwordError}"></small>
+                </div>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="terms" required>
+                <label class="form-check-label" for="terms">Tôi đồng ý với điều khoản sử dụng</label>
+            </div>
+            <button type="submit" class="btn btn-block btn-custom">Đăng ký</button>
+            <div class="text-center mt-3">
+                Đã có tài khoản? <a th:href="@{/login}" class="font-weight-bold text-primary">Đăng nhập</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+</body>
+</html>

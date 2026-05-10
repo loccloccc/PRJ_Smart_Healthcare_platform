@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title>Đặt lịch khám</title>
+
+    <meta charset="utf-8">
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+</head>
+
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container mt-5">
+
+    <h3 class="text-center mb-4">
+
+        <span th:if="${isEdit}">
+            ✏️ Chỉnh sửa lịch khám
+        </span>
+
+        <span th:unless="${isEdit}">
+            📅 Đặt lịch khám
+        </span>
+
+    </h3>
+
+    <div th:if="${error}"
+         class="alert alert-danger"
+         th:text="${error}">
+    </div>
+
+    <form th:action="@{/patient/booking/book_add}"
+          th:object="${appointmentRequestDTO}"
+          method="post"
+          class="card p-4 shadow">
+
+        <input type="hidden"
+               th:field="*{id}">
+
+        <input type="hidden"
+               th:field="*{doctorId}">
+
+        <input type="hidden"
+               th:field="*{patientId}">
+
+        <div class="form-group">
+
+            <label>Bác sĩ</label>
+
+            <input type="text"
+                   class="form-control"
+                   th:value="${doctor.user.username}"
+                   readonly>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Chuyên khoa</label>
+
+            <input type="text"
+                   class="form-control"
+                   th:value="${doctor.specialty.name}"
+                   readonly>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Ngày giờ khám</label>
+
+            <input type="datetime-local"
+                   class="form-control"
+                   th:field="*{appointmentTime}"
+                   required>
+
+            <small class="text-danger"
+                   th:errors="*{appointmentTime}">
+            </small>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Lý do khám</label>
+
+            <textarea class="form-control"
+                      rows="4"
+                      th:field="*{note}">
+            </textarea>
+
+            <small class="text-danger"
+                   th:errors="*{note}">
+            </small>
+
+        </div>
+
+        <div class="d-flex justify-content-between">
+
+            <a th:href="@{/patient/booking}"
+               class="btn btn-secondary">
+
+                Hủy
+            </a>
+
+            <button class="btn btn-primary"
+                    type="submit">
+
+                <span th:if="${isEdit}">
+                    Cập nhật
+                </span>
+
+                <span th:unless="${isEdit}">
+                    Xác nhận đặt lịch
+                </span>
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

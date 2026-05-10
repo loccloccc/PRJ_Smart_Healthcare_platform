@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hồ sơ người dùng - MedCare</title>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body { background-color:#f9fafc; font-family:'Segoe UI',sans-serif; }
+        .profile-container { max-width:900px; margin:50px auto; background:#fff; border-radius:15px;
+            box-shadow:0 6px 15px rgba(0,0,0,0.1); padding:40px; }
+        .avatar-box { text-align:center; }
+        .avatar-box img { width:180px; height:180px; border-radius:50%; object-fit:cover;
+            border:3px solid #0c56d0; margin-bottom:15px; }
+        .info-box label { font-weight:600; }
+        .btn-update { background:#0c56d0; color:white; border-radius:25px; }
+        .btn-cancel { background:#6c757d; color:white; border-radius:25px; }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="profile-container">
+    <div class="row">
+        <div class="col-md-4 avatar-box">
+            <h5>Ảnh đại diện</h5>
+            <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Avatar">
+            <p class="mt-2"><strong th:text="${userLogin.role}"></strong></p>
+        </div>
+
+        <div class="col-md-8 info-box">
+            <h5 class="mb-3">Thông tin cá nhân</h5>
+            <form method="post">
+                <div class="form-group">
+                    <label>Họ và tên</label>
+                    <input type="text" class="form-control" th:value="${userLogin.username}">
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" th:value="${userLogin.email}">
+                </div>
+
+                <div class="form-group" th:if="${userLogin.role == 'DOCTOR'}">
+                    <label>Chuyên khoa</label>
+                    <input type="text" class="form-control" th:value="${specialtyName}" readonly>
+                </div>
+
+                <div class="form-group" th:if="${userLogin.role == 'ADMIN'}">
+                    <label>Quyền quản trị</label>
+                    <input type="text" class="form-control" value="Quản lý hệ thống" readonly>
+                </div>
+
+                <div class="form-group" th:if="${userLogin.role == 'PATIENT'}">
+                    <label>Bệnh nhân</label>
+                    <input type="text" class="form-control" value="Bệnh nhân" readonly>
+                </div>
+
+                <div class="form-group d-flex justify-content-end">
+                    <button type="submit" class="btn btn-update mr-2">Cập nhật</button>
+
+                    <div th:if="${userLogin.role == 'ADMIN'}">
+                        <a th:href="@{/admin/home}" class="btn btn-cancel">Hủy</a>
+                    </div>
+                    <div th:if="${userLogin.role == 'DOCTOR'}">
+                        <a th:href="@{/doctor/home}" class="btn btn-cancel">Hủy</a>
+                    </div>
+                    <div th:if="${userLogin.role == 'PATIENT'}">
+                        <a th:href="@{/patient/home}" class="btn btn-cancel">Hủy</a>
+                    </div>
+                </div>
+
+
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <title>Trang chủ Admin - Tổng Quan Hệ Thống</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        crossorigin="anonymous">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        crossorigin="anonymous">
+
+  <style>
+    body { background-color: #f9fafc; font-family: 'Segoe UI', sans-serif; }
+    .summary-box {
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      padding: 20px; text-align: center;
+    }
+    .summary-box h4 { font-weight: 700; color: #0c56d0; }
+    .summary-box p { color: #666; margin: 0; }
+    .summary-box small { color: #28a745; font-weight: 600; }
+    .summary-box .btn {
+      margin-top: 10px; border-radius: 25px; font-weight: 600;
+    }
+    .chart-box, .activity-box {
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      padding: 20px;
+    }
+    .section-title { color: #0c56d0; font-weight: 700; margin-bottom: 15px; }
+    .activity-item { margin-bottom: 10px; }
+    .activity-item strong { color: #0c56d0; }
+    .btn-view { border-radius: 25px; font-weight: 600; }
+  </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container mt-4">
+  <h3 class="text-primary mb-2">Tổng Quan Hệ Thống</h3>
+  <p class="text-muted mb-4">Cập nhật dữ liệu thời gian thực cho ngày hôm nay.</p>
+
+  <!-- Tổng quan -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="summary-box">
+        <i class="fas fa-user-md fa-2x text-primary mb-2"></i>
+        <h4 th:text="${doctorCount}">1,284</h4>
+        <p>Tổng Bác Sĩ</p>
+        <small>+12%</small><br>
+        <a th:href="@{/admin/doctors}" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="summary-box">
+        <i class="fas fa-users fa-2x text-secondary mb-2"></i>
+        <h4 th:text="${patientCount}">45,902</h4>
+        <p>Tổng Bệnh Nhân</p>
+        <small>+8.4%</small><br>
+        <a th:href="@{/admin/patients}" class="btn btn-outline-secondary btn-sm">Xem chi tiết</a>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="summary-box">
+        <i class="fas fa-file-prescription fa-2x text-danger mb-2"></i>
+        <h4 th:text="${pendingPrescriptions}">85</h4>
+        <p>Đơn Chờ Duyệt</p>
+        <small class="text-danger">Cần xử lý ngay</small><br>
+        <a th:href="@{/admin/prescriptions}" class="btn btn-outline-danger btn-sm">Duyệt đơn</a>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="summary-box">
+        <i class="fas fa-capsules fa-2x text-success mb-2"></i>
+        <h4 th:text="${medicineCount}">3,420</h4>
+        <p>Danh Mục Thuốc</p>
+        <small>Cập nhật 2 giờ trước</small><br>
+        <a th:href="@{/admin/medicines}" class="btn btn-outline-success btn-sm">Quản lý thuốc</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Biểu đồ tăng trưởng -->
+    <div class="col-md-8">
+      <div class="chart-box">
+        <h6 class="section-title"><i class="fas fa-chart-bar"></i> Tăng trưởng người dùng</h6>
+        <div class="d-flex justify-content-end mb-2">
+          <button class="btn btn-sm btn-outline-primary mr-2">Tuần</button>
+          <button class="btn btn-sm btn-primary">Tháng</button>
+        </div>
+        <div class="text-center">
+          <img src="https://via.placeholder.com/600x200?text=Biểu+đồ+Tăng+trưởng" alt="chart" class="img-fluid rounded">
+          <p class="text-muted mt-2">Tháng này: <strong>+2.4k người dùng</strong></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hoạt động gần đây -->
+    <div class="col-md-4">
+      <div class="activity-box">
+        <h6 class="section-title"><i class="fas fa-history"></i> Hoạt động gần đây</h6>
+        <div class="activity-item"><strong>Bác sĩ Trần Hưng</strong> đã phê duyệt đơn thuốc #4829 <small class="text-muted">2 phút trước</small></div>
+        <div class="activity-item">5 bệnh nhân mới vừa đăng ký tài khoản <small class="text-muted">15 phút trước</small></div>
+        <div class="activity-item text-danger"><strong>Cảnh báo:</strong> Paracetamol 500mg sắp hết hàng <small class="text-muted">45 phút trước</small></div>
+        <div class="activity-item">Hệ thống đã cập nhật danh mục <strong>Tim mạch</strong> <small class="text-muted">1 giờ trước</small></div>
+        <div class="activity-item">Backup dữ liệu hệ thống hoàn tất <small class="text-muted">3 giờ trước</small></div>
+        <a th:href="@{/admin/activities}" class="btn btn-outline-primary btn-view mt-3">Xem tất cả hoạt động</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

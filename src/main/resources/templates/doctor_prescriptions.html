@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Kê đơn thuốc - MedCare</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          crossorigin="anonymous">
+
+    <style>
+        body { background-color: #f9fafc; font-family: 'Segoe UI', sans-serif; }
+        .card-box { background: #fff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); padding: 20px; margin-bottom: 20px; }
+        .section-title { color: #0c56d0; font-weight: 700; margin-bottom: 15px; }
+        .btn-primary { background-color: #0c56d0; border: none; border-radius: 25px; font-weight: 600; }
+        .btn-primary:hover { background-color: #0945a8; }
+        .btn-add { background-color: #28a745; color: #fff; border-radius: 25px; font-weight: 600; }
+        .btn-add:hover { background-color: #218838; }
+        .btn-edit { background-color: #ffc107; color: #fff; border-radius: 25px; font-weight: 600; }
+        .btn-delete { background-color: #dc3545; color: #fff; border-radius: 25px; font-weight: 600; }
+        .status-pending { color: #ffc107; font-weight: 600; }
+        .status-approved { color: #28a745; font-weight: 600; }
+        .status-rejected { color: #dc3545; font-weight: 600; }
+    </style>
+</head>
+<body>
+<div class="container mt-4">
+    <!-- Thông tin bệnh nhân -->
+    <div class="card-box d-flex align-items-center">
+        <div class="rounded-circle bg-light text-primary d-flex justify-content-center align-items-center mr-3" style="width:60px;height:60px;">
+            <span th:text="${patient.initials}">NT</span>
+        </div>
+        <div>
+            <h5 th:text="${patient.name}">Nguyễn Thành Trung</h5>
+            <p class="text-muted mb-1" th:text="'ID: ' + ${patient.code} + ' • ' + ${patient.gender} + ' • ' + ${patient.age} + ' tuổi'">
+                ID: BN-92834 • Nam • 42 tuổi
+            </p>
+        </div>
+    </div>
+
+    <!-- Form kê đơn -->
+    <div class="card-box">
+        <h6 class="section-title"><i class="fas fa-pills"></i> Kê đơn thuốc</h6>
+        <form th:action="@{/doctor/savePrescription}" method="post">
+            <input type="hidden" name="patient_id" th:value="${patient.id}">
+
+            <div id="medicine-list">
+                <div class="form-row mb-3">
+                    <div class="col-md-4">
+                        <input type="text" name="medicine" class="form-control" placeholder="Tên thuốc" required>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="dosage" class="form-control" placeholder="Liều lượng" required>
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" name="instructions" class="form-control" placeholder="Hướng dẫn sử dụng">
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-add mb-3" onclick="addMedicineRow()"><i class="fas fa-plus"></i> Thêm thuốc</button>
+
+            <div class="form-group">
+                <label>Ghi chú thêm</label>
+                <textarea name="note" class="form-control" rows="2" placeholder="Ví dụ: uống sau ăn, theo dõi tác dụng phụ..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu đơn thuốc</button>
+        </form>
+    </div>
+
+    <!-- Tóm tắt đơn thuốc -->
+    <div class="card-box">
+        <h6 class="section-title"><i class="fas fa-clipboard-list"></i> Tóm tắt đơn thuốc</h6>
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            <tr>
+                <th>Thuốc</th>
+                <th>Liều lượng</th>
+                <th>Hướng dẫn</th>
+                <th>Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="pres : ${prescriptions}">
+                <td th:text="${pres.medicine}">Paracetamol</td>
+                <td th:text="${pres.dosage}">500mg</td>
+                <td th:text="${pres.instructions}">Ngày 2 lần sau ăn</td>
+                <td>
+                    <a th:href="@{/doctor/editPrescription/{id}(id=${pres.id})}" class="btn btn-edit btn-sm"><i class="fas fa-edit"></i> Sửa</a>
+                    <form th:action="@{/doctor/deletePrescription}" method="post" style="display:inline;">
+                        <input type="hidden" name="id" th:value="${pres.id}">
+                        <button type="submit" class="btn btn-delete btn-sm"><i class="fas fa-trash"></i> Xóa</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- JS -->
+<script>
+    function addMedicineRow() {
+        const row = `
+        <div class="form-row mb-3">
+            <div class="col-md-4">
+                <input type="text" name="medicine" class="form-control" placeholder="Tên thuốc" required>
+            </div>
+            <div class="col-md-3">
+                <input type="text" name="dosage" class="form-control" placeholder="Liều lượng" required>
+            </div>
+            <div class="col-md-5">
+                <input type="text" name="instructions" class="form-control" placeholder="Hướng dẫn sử dụng">
+            </div>
+        </div>`;
+        document.getElementById("medicine-list").insertAdjacentHTML("beforeend", row);
+    }
+</script>
+</body>
+</html>

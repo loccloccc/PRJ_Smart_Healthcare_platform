@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title>Tiếp nhận khám - MedCare</title>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+
+        body{
+            background:#f9fafc;
+            font-family:'Segoe UI',sans-serif;
+        }
+
+        .card-box{
+            background:#fff;
+            border-radius:12px;
+            padding:20px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom:20px;
+        }
+
+        .btn-save{
+            background:#0c56d0;
+            color:white;
+            border-radius:25px;
+            font-weight:600;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container mt-4 mb-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h3 class="text-primary">
+            🩺 Tiếp nhận khám
+        </h3>
+
+        <a th:href="@{/doctor/patients}"
+           class="btn btn-secondary">
+
+            ← Quay lại
+
+        </a>
+
+    </div>
+
+    <!-- thông tin -->
+    <div class="card-box">
+
+        <h5 th:text="${appointment.patient.username}">
+            Patient
+        </h5>
+
+        <p>
+
+            <strong>Thời gian:</strong>
+
+            <span th:text="${#temporals.format(
+                appointment.appointmentTime,
+                'HH:mm dd/MM/yyyy'
+            )}">
+            </span>
+
+        </p>
+
+        <p>
+
+            <strong>Ghi chú:</strong>
+
+            <span th:text="${appointment.note != null ? appointment.note : 'Không có ghi chú'}">
+            </span>
+
+        </p>
+
+    </div>
+
+    <!-- form -->
+    <form th:action="@{/doctor/diagnosis/save}"
+          method="post">
+
+        <input type="hidden"
+               name="appointmentId"
+               th:value="${appointment.id}">
+
+        <div class="card-box">
+
+            <div class="form-group">
+
+                <label>Triệu chứng</label>
+
+                <textarea class="form-control"
+                          name="symptoms"
+                          rows="3"
+                          required></textarea>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Chẩn đoán</label>
+
+                <textarea class="form-control"
+                          name="diagnosis"
+                          rows="3"
+                          required></textarea>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Kết quả điều trị</label>
+
+                <textarea class="form-control"
+                          name="result"
+                          rows="3"></textarea>
+
+            </div>
+
+        </div>
+
+        <!-- thuốc -->
+        <div class="card-box">
+
+            <h5 class="mb-3">
+                💊 Danh sách thuốc
+            </h5>
+
+            <div th:if="${#lists.isEmpty(medicines)}"
+                 class="alert alert-warning">
+
+                Chưa có thuốc nào.
+
+            </div>
+
+            <div th:each="medicine : ${medicines}"
+                 class="border rounded p-3 mb-3">
+
+                <div class="row">
+
+                    <div class="col-md-4">
+
+                        <label>Tên thuốc</label>
+
+                        <input type="text"
+                               class="form-control"
+                               th:value="${medicine.name}"
+                               readonly>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <label>Số lượng</label>
+
+                        <input type="number"
+                               class="form-control"
+                               min="0"
+                               value="0">
+
+                    </div>
+
+                    <div class="col-md-5">
+
+                        <label>Liều dùng</label>
+
+                        <input type="text"
+                               class="form-control"
+                               placeholder="VD: ngày 2 lần">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <button type="submit"
+                class="btn btn-save">
+
+            💾 Lưu hồ sơ khám
+
+        </button>
+
+    </form>
+
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <title>Danh mục chuyên khoa - Admin</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        crossorigin="anonymous">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        crossorigin="anonymous">
+</head>
+<body>
+<div class="container mt-4">
+  <h3 class="text-primary mb-4"><i class="fas fa-stethoscope"></i> Quản lý danh mục chuyên khoa</h3>
+
+  <!-- Nút thêm chuyên khoa -->
+  <div class="mb-3">
+    <a th:href="@{/admin/addSpecialty}" class="btn btn-primary">
+      <i class="fas fa-plus"></i> Thêm chuyên khoa mới
+    </a>
+  </div>
+
+  <!-- Bảng danh sách chuyên khoa -->
+  <table class="table table-bordered table-hover">
+    <thead class="thead-light">
+    <tr>
+      <th>ID</th>
+      <th>Tên chuyên khoa</th>
+      <th>Mô tả</th>
+      <th>Thao tác</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="spec : ${specialties}">
+      <td th:text="${spec.id}">1</td>
+      <td th:text="${spec.name}">Tim mạch</td>
+      <td th:text="${spec.description}">Khám và điều trị bệnh tim</td>
+      <td>
+        <a th:href="@{/admin/editSpecialty/{id}(id=${spec.id})}" class="btn btn-warning btn-sm">
+          <i class="fas fa-edit"></i> Sửa
+        </a>
+        <form th:action="@{/admin/deleteSpecialty}" method="post" style="display:inline;">
+          <input type="hidden" name="id" th:value="${spec.id}">
+          <button type="submit" class="btn btn-danger btn-sm">
+            <i class="fas fa-trash"></i> Xóa
+          </button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

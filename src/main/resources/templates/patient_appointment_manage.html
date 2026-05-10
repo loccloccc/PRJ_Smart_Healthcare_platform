@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Quản lý lịch khám - MedCare</title>
+
+  <meta charset="utf-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        crossorigin="anonymous">
+
+  <style>
+
+    body {
+      background-color: #f9fafc;
+      font-family: 'Segoe UI', sans-serif;
+
+      /* QUAN TRỌNG */
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* QUAN TRỌNG */
+    .main-content {
+      flex: 1;
+    }
+
+    .table-box {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .btn-action {
+      border-radius: 20px;
+      font-weight: 600;
+      padding: 5px 15px;
+    }
+
+    .btn-edit {
+      background-color: #ffc107;
+      color: white;
+      border: none;
+    }
+
+    .btn-edit:hover {
+      background-color: #e0a800;
+      color: white;
+    }
+
+    .btn-cancel {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+    }
+
+    .btn-cancel:hover {
+      background-color: #c82333;
+      color: white;
+    }
+
+    .page-title {
+      color: #0c56d0;
+      font-weight: 700;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<!-- MAIN -->
+<div class="container mt-5 main-content">
+
+  <div class="mb-3">
+    <a th:href="@{/patient/home}" class="btn btn-primary">
+      ← Quay lại trang chủ
+    </a>
+  </div>
+
+  <div class="table-box">
+
+    <h3 class="mb-4 text-center page-title">
+      📋 Quản lý lịch khám
+    </h3>
+
+    <div th:if="${success}" class="alert alert-success text-center">
+      <span th:text="${success}"></span>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger text-center">
+      <span th:text="${error}"></span>
+    </div>
+
+    <div th:if="${#lists.isEmpty(appointments)}"
+         class="alert alert-info text-center">
+
+      Bạn chưa có lịch khám nào.
+
+    </div>
+
+    <table class="table table-bordered table-hover"
+           th:if="${!#lists.isEmpty(appointments)}">
+
+      <thead class="thead-light">
+
+      <tr>
+        <th>STT</th>
+        <th>Bác sĩ</th>
+        <th>Chuyên khoa</th>
+        <th>Ngày khám</th>
+        <th>Giờ khám</th>
+        <th>Ghi chú</th>
+        <th>Trạng thái</th>
+        <th>Thao tác</th>
+      </tr>
+
+      </thead>
+
+      <tbody>
+
+      <tr th:each="appt, start : ${appointments}">
+
+        <td th:text="${start.count}"></td>
+
+        <td th:text="${appt.doctor.user.username}"></td>
+
+        <td th:text="${appt.doctor.specialty.name}"></td>
+
+        <td th:text="${#temporals.format(appt.appointmentTime,'dd/MM/yyyy')}"></td>
+
+        <td th:text="${#temporals.format(appt.appointmentTime,'HH:mm')}"></td>
+
+        <td th:text="${appt.note}"></td>
+
+        <td>
+
+          <span class="badge badge-warning"
+                th:if="${appt.status == 'PENDING'}">
+
+            Chờ khám
+
+          </span>
+
+          <span class="badge badge-success"
+                th:if="${appt.status == 'COMPLETED'}">
+
+            Đã hoàn thành
+
+          </span>
+
+        </td>
+
+        <td>
+
+          <a th:href="@{|/patient/appointment/edit/${appt.id}|}"
+             class="btn btn-edit btn-action">
+
+            ✏️ Sửa
+
+          </a>
+
+          <a th:href="@{|/patient/appointment/delete/${appt.id}|}"
+             onclick="return confirm('Bạn có chắc chắn muốn hủy lịch khám này không?')"
+             class="btn btn-cancel btn-action">
+
+            ❌ Hủy
+
+          </a>
+
+        </td>
+
+      </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

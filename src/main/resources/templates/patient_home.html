@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Trang chủ bệnh nhân - MedCare</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #f9fafc;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .banner {
+            background: linear-gradient(90deg, #0c56d0, #11998e);
+            color: white;
+            border-radius: 15px;
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .banner-text h2 {
+            font-weight: 700;
+        }
+        .banner-text p {
+            font-size: 15px;
+            opacity: 0.9;
+        }
+        .section-title {
+            text-align: center;
+            font-weight: 700;
+            margin: 50px 0 30px;
+            color: #0c56d0;
+        }
+        .card-custom {
+            border-radius: 15px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background: #fff;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            height: 100%;
+        }
+        .card-custom:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .btn-access {
+            background-color: #0c56d0;
+            color: white;
+            border-radius: 25px;
+            font-weight: 600;
+            padding: 8px 20px;
+        }
+        .btn-access:hover {
+            background-color: #0945a8;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+
+    <!-- Banner -->
+    <div class="banner">
+        <div class="banner-text" >
+            <h2>Xin chào <span th:text="${userLogin.username}">Lộc</span> 👋</h2>
+            <p>Chào mừng bạn đến với hệ thống chăm sóc sức khỏe số MedCare.
+                Quản lý hồ sơ, đặt lịch khám và theo dõi bệnh án của bạn mọi lúc, mọi nơi!</p>
+        </div>
+        <img src="https://cdn-icons-png.flaticon.com/512/2922/2922510.png" alt="Patient" width="120">
+    </div>
+
+    <!-- Section title -->
+    <h3 class="section-title">Hệ thống bệnh nhân</h3>
+
+    <!-- Cards -->
+    <div class="row">
+        <div class="col-md-4 mb-4 d-flex">
+            <div class="card card-custom text-center p-4 w-100">
+                <img src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png" width="60" class="mx-auto mb-3">
+                <div class="card-body">
+                    <h5>Hồ sơ cá nhân</h5>
+                    <p class="text-muted small">Xem và cập nhật thông tin cá nhân của bạn.</p>
+                    <a th:href="@{/patient/profile}" class="btn btn-access mt-auto">Truy cập →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4 d-flex">
+            <div class="card card-custom text-center p-4 w-100">
+                <img src="https://cdn-icons-png.flaticon.com/512/747/747310.png" width="60" class="mx-auto mb-3">
+                <div class="card-body">
+                    <h5>Đặt lịch khám</h5>
+                    <p class="text-muted small">Đặt lịch hẹn với bác sĩ chuyên khoa.</p>
+                    <a th:href="@{/patient/booking}" class="btn btn-access mt-auto">Truy cập →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4 d-flex">
+            <div class="card card-custom text-center p-4 w-100">
+                <img src="https://cdn-icons-png.flaticon.com/512/1828/1828843.png" width="60" class="mx-auto mb-3">
+                <div class="card-body">
+                    <h5>Quản lý lịch khám</h5>
+                    <p class="text-muted small">Xem và hủy các lịch hẹn đã đặt.</p>
+                    <a th:href="@{/patient/list}" class="btn btn-access mt-auto">Truy cập →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4 d-flex">
+            <div class="card card-custom text-center p-4 w-100">
+                <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png" width="60" class="mx-auto mb-3">
+                <div class="card-body">
+                    <h5>Lịch sử bệnh án</h5>
+                    <p class="text-muted small">Theo dõi các lần khám và đơn thuốc của bạn.</p>
+                    <a th:href="@{/patient/history}" class="btn btn-access mt-auto">Truy cập →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4 d-flex">
+            <div class="card card-custom text-center p-4 w-100">
+                <img src="https://cdn-icons-png.flaticon.com/512/2920/2920342.png" width="60" class="mx-auto mb-3">
+                <div class="card-body">
+                    <h5>Hỗ trợ & tư vấn</h5>
+                    <p class="text-muted small">Liên hệ với đội ngũ hỗ trợ MedCare khi cần giúp đỡ.</p>
+                    <a href="#" class="btn btn-access mt-auto">Truy cập →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
