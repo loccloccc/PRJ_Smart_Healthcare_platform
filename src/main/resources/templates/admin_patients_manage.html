@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý bệnh nhân</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background: #f4f6f9;
+            font-family: Arial;
+        }
+
+        .container-box {
+            background: white;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            color: #0c56d0;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .btn-action {
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+        }
+
+        .btn-lock {
+            background: darkred;
+            color: white;
+        }
+
+        .btn-view {
+            background: #17a2b8;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container container-box">
+
+    <h3 class="title">🧑‍🤝‍🧑 Quản lý bệnh nhân</h3>
+
+    <table class="table table-bordered table-hover">
+
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Họ tên</th>
+            <th>SĐT</th>
+            <th>Giới tính</th>
+            <th>Địa chỉ</th>
+            <th>Thao tác</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr>
+            <td>1</td>
+            <td>Nguyễn Văn C</td>
+            <td>0901111111</td>
+            <td>Nam</td>
+            <td>Hà Nội</td>
+            <td>
+                <button class="btn btn-view btn-action">Xem</button>
+                <button class="btn btn-lock btn-action">Khóa</button>
+            </td>
+        </tr>
+
+        <tr>
+            <td>2</td>
+            <td>Trần Thị D</td>
+            <td>0902222222</td>
+            <td>Nữ</td>
+            <td>Đà Nẵng</td>
+            <td>
+                <button class="btn btn-view btn-action">Xem</button>
+                <button class="btn btn-lock btn-action">Khóa</button>
+            </td>
+        </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</body>
+</html>

@@ -1,84 +1,296 @@
 <!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
 <head>
+
     <title>Hồ sơ người dùng - MedCare</title>
+
     <meta charset="utf-8">
+
     <meta name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+          content="width=device-width, initial-scale=1">
+
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
     <style>
-        body { background-color:#f9fafc; font-family:'Segoe UI',sans-serif; }
-        .profile-container { max-width:900px; margin:50px auto; background:#fff; border-radius:15px;
-            box-shadow:0 6px 15px rgba(0,0,0,0.1); padding:40px; }
-        .avatar-box { text-align:center; }
-        .avatar-box img { width:180px; height:180px; border-radius:50%; object-fit:cover;
-            border:3px solid #0c56d0; margin-bottom:15px; }
-        .info-box label { font-weight:600; }
-        .btn-update { background:#0c56d0; color:white; border-radius:25px; }
-        .btn-cancel { background:#6c757d; color:white; border-radius:25px; }
+
+        body {
+            background-color: #f9fafc;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .profile-container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            padding: 40px;
+        }
+
+        .avatar-box {
+            text-align: center;
+        }
+
+        .avatar-box img {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #0c56d0;
+            margin-bottom: 10px;
+        }
+
+        .btn-update {
+            background: #0c56d0;
+            color: white;
+            border-radius: 25px;
+        }
+
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+            border-radius: 25px;
+        }
+
+        .text-error {
+            color: red;
+            font-size: 14px;
+        }
+
     </style>
+
 </head>
+
 <body>
+
 <div th:replace="fragments/header :: header"></div>
 
 <div class="profile-container">
+
     <div class="row">
+
+        <!-- AVATAR -->
         <div class="col-md-4 avatar-box">
-            <h5>Ảnh đại diện</h5>
-            <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Avatar">
-            <p class="mt-2"><strong th:text="${userLogin.role}"></strong></p>
+
+            <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
+                 alt="avatar">
+
+            <h5 th:text="${userProfiles != null ? userProfiles.fullName : 'Chưa có tên'}">
+            </h5>
+
+            <p class="text-muted"
+               th:text="${userLogin.role}">
+            </p>
+
         </div>
 
-        <div class="col-md-8 info-box">
-            <h5 class="mb-3">Thông tin cá nhân</h5>
-            <form method="post">
+        <!-- FORM -->
+        <div class="col-md-8">
+
+            <h4 class="mb-4">
+                Thông tin cá nhân
+            </h4>
+
+            <form th:action="@{/profile/update}"
+                  method="post"
+                  th:object="${userProfiles}">
+
+                <!-- ROW 1 -->
+                <div class="form-row">
+
+                    <!-- EMAIL -->
+                    <div class="form-group col-md-6">
+
+                        <label>Email</label>
+
+                        <input type="email"
+                               class="form-control"
+                               th:value="${userLogin.email}"
+                               readonly>
+
+                    </div>
+
+                    <!-- FULL NAME -->
+                    <div class="form-group col-md-6">
+
+                        <label>Họ và tên</label>
+
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{fullName}">
+
+                        <small class="text-error"
+                               th:if="${#fields.hasErrors('fullName')}"
+                               th:errors="*{fullName}">
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <!-- ROW 2 -->
+                <div class="form-row">
+
+                    <!-- DATE -->
+                    <div class="form-group col-md-6">
+
+                        <label>Ngày sinh</label>
+
+                        <input type="date"
+                               class="form-control"
+                               name="dateOfBirth"
+                               th:value="${userProfiles.dateOfBirth != null ? #temporals.format(userProfiles.dateOfBirth,'yyyy-MM-dd') : ''}">
+                        <small class="text-error"
+                               th:if="${#fields.hasErrors('dateOfBirth')}"
+                               th:errors="*{dateOfBirth}">
+                        </small>
+
+                    </div>
+
+                    <!-- PHONE -->
+                    <div class="form-group col-md-6">
+
+                        <label>Số điện thoại</label>
+
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{phone}">
+
+                        <small class="text-error"
+                               th:if="${#fields.hasErrors('phone')}"
+                               th:errors="*{phone}">
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <!-- ROW 3 -->
+                <div class="form-row">
+
+                    <!-- GENDER -->
+                    <div class="form-group col-md-6">
+
+                        <label>Giới tính</label>
+
+                        <select class="form-control"
+                                th:field="*{gender}">
+
+                            <option value="male">
+                                Nam
+                            </option>
+
+                            <option value="female">
+                                Nữ
+                            </option>
+
+                        </select>
+
+                        <small class="text-error"
+                               th:if="${#fields.hasErrors('gender')}"
+                               th:errors="*{gender}">
+                        </small>
+
+                    </div>
+
+                    <!-- ROLE -->
+                    <div class="form-group col-md-6">
+
+                        <label>Vai trò</label>
+
+                        <input type="text"
+                               class="form-control"
+                               th:value="${userLogin.role}"
+                               readonly>
+
+                    </div>
+
+                </div>
+
+                <!-- ROW 4 -->
+                <div class="form-row">
+
+                    <!-- SPECIALTY -->
+                    <div class="form-group col-md-6">
+
+                        <label>Chuyên khoa</label>
+
+                        <input type="text"
+                               class="form-control"
+                               th:value="${userLogin.role == 'DOCTOR' and doctor != null and doctor.specialty != null ? doctor.specialty.name : 'Không áp dụng'}"
+                               readonly>
+
+                    </div>
+
+                </div>
+
+                <!-- ADDRESS -->
                 <div class="form-group">
-                    <label>Họ và tên</label>
-                    <input type="text" class="form-control" th:value="${userLogin.username}">
+
+                    <label>Địa chỉ</label>
+
+                    <input type="text"
+                           class="form-control"
+                           th:field="*{address}">
+
+                    <small class="text-error"
+                           th:if="${#fields.hasErrors('address')}"
+                           th:errors="*{address}">
+                    </small>
+
                 </div>
 
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" class="form-control" th:value="${userLogin.email}">
+                <!-- BUTTON -->
+                <div class="d-flex justify-content-end">
+
+                    <button type="submit"
+                            class="btn btn-update mr-2">
+
+                        Cập nhật
+
+                    </button>
+
+                    <!-- PATIENT -->
+                    <a th:if="${userLogin.role == 'PATIENT'}"
+                       th:href="@{/patient/home}"
+                       class="btn btn-cancel">
+
+                        Hủy
+
+                    </a>
+
+                    <!-- DOCTOR -->
+                    <a th:if="${userLogin.role == 'DOCTOR'}"
+                       th:href="@{/doctor/home}"
+                       class="btn btn-cancel">
+
+                        Hủy
+
+                    </a>
+
+                    <!-- ADMIN -->
+                    <a th:if="${userLogin.role == 'ADMIN'}"
+                       th:href="@{/admin/home}"
+                       class="btn btn-cancel">
+
+                        Hủy
+
+                    </a>
+
                 </div>
-
-                <div class="form-group" th:if="${userLogin.role == 'DOCTOR'}">
-                    <label>Chuyên khoa</label>
-                    <input type="text" class="form-control" th:value="${specialtyName}" readonly>
-                </div>
-
-                <div class="form-group" th:if="${userLogin.role == 'ADMIN'}">
-                    <label>Quyền quản trị</label>
-                    <input type="text" class="form-control" value="Quản lý hệ thống" readonly>
-                </div>
-
-                <div class="form-group" th:if="${userLogin.role == 'PATIENT'}">
-                    <label>Bệnh nhân</label>
-                    <input type="text" class="form-control" value="Bệnh nhân" readonly>
-                </div>
-
-                <div class="form-group d-flex justify-content-end">
-                    <button type="submit" class="btn btn-update mr-2">Cập nhật</button>
-
-                    <div th:if="${userLogin.role == 'ADMIN'}">
-                        <a th:href="@{/admin/home}" class="btn btn-cancel">Hủy</a>
-                    </div>
-                    <div th:if="${userLogin.role == 'DOCTOR'}">
-                        <a th:href="@{/doctor/home}" class="btn btn-cancel">Hủy</a>
-                    </div>
-                    <div th:if="${userLogin.role == 'PATIENT'}">
-                        <a th:href="@{/patient/home}" class="btn btn-cancel">Hủy</a>
-                    </div>
-                </div>
-
-
 
             </form>
+
         </div>
+
     </div>
+
 </div>
 
 <div th:replace="fragments/footer :: footer"></div>
+
 </body>
+
 </html>

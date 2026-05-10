@@ -3,7 +3,9 @@ package com.example.smart_healthcare_platform.controller;
 import com.example.smart_healthcare_platform.dto.MedicineDTO;
 import com.example.smart_healthcare_platform.model.Medicine;
 import com.example.smart_healthcare_platform.model.User;
+import com.example.smart_healthcare_platform.model.UserProfiles;
 import com.example.smart_healthcare_platform.service.IMedicineService;
+import com.example.smart_healthcare_platform.service.IUserProfilesService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AdminController {
     private final IMedicineService medicineService;
+    private final IUserProfilesService  userProfilesService;
 
     @GetMapping("/admin/home")
     public String adminHome(HttpSession session , Model model) {
@@ -26,19 +29,6 @@ public class AdminController {
         model.addAttribute("userLogin", user);
         return "admin_home";
     }
-
-    @GetMapping("/admin/profile")
-    public String profile(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("userLogin");
-        if (user == null) {
-            return "redirect:/login";
-        }
-        model.addAttribute("userLogin", user);
-        return "profile";
-    }
-
-
-
 
     @GetMapping("/admin/medicines")
     public String listMedicines(Model model, HttpSession session) {

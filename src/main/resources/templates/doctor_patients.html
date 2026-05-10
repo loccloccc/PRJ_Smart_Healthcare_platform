@@ -18,9 +18,21 @@
 
     <style>
 
+        html, body{
+            height:100%;
+            margin:0;
+        }
+
         body{
             background-color:#f9fafc;
             font-family:'Segoe UI',sans-serif;
+
+            display:flex;
+            flex-direction:column;
+        }
+
+        main{
+            flex:1;
         }
 
         .table-box{
@@ -45,99 +57,103 @@
 
 <div th:replace="fragments/header :: header"></div>
 
-<div class="container mt-4">
+<main>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="container mt-4">
 
-        <h3 class="text-primary">
-            Danh sách bệnh nhân chờ khám
-        </h3>
+        <div class="d-flex justify-content-between align-items-center mb-4">
 
-        <a th:href="@{/doctor/home}"
-           class="btn btn-secondary">
+            <h3 class="text-primary">
+                Danh sách bệnh nhân chờ khám
+            </h3>
 
-            ← Quay lại
+            <a th:href="@{/doctor/home}"
+               class="btn btn-secondary">
 
-        </a>
+                ← Quay lại
 
-    </div>
+            </a>
 
-    <div class="table-box">
+        </div>
 
-        <table class="table table-hover">
+        <div class="table-box">
 
-            <thead class="thead-light">
+            <table class="table table-hover">
 
-            <tr>
+                <thead class="thead-light">
 
-                <th>Bệnh nhân</th>
-                <th>Thời gian</th>
-                <th>Lý do khám</th>
-                <th>Trạng thái</th>
-                <th></th>
+                <tr>
 
-            </tr>
+                    <th>Bệnh nhân</th>
+                    <th>Thời gian</th>
+                    <th>Lý do khám</th>
+                    <th>Trạng thái</th>
+                    <th></th>
 
-            </thead>
+                </tr>
 
-            <tbody>
+                </thead>
 
-            <tr th:if="${#lists.isEmpty(appointments)}">
+                <tbody>
 
-                <td colspan="5"
-                    class="text-center text-muted">
+                <tr th:if="${#lists.isEmpty(appointments)}">
 
-                    Chưa có bệnh nhân.
+                    <td colspan="5"
+                        class="text-center text-muted">
 
-                </td>
+                        Chưa có bệnh nhân.
 
-            </tr>
+                    </td>
 
-            <tr th:each="appt : ${appointments}">
+                </tr>
 
-                <td th:text="${appt.patient.username}"></td>
+                <tr th:each="appt : ${appointments}">
 
-                <td>
+                    <td th:text="${appt.patient.username}"></td>
 
-                    <span th:text="${#temporals.format(
+                    <td>
+
+                        <span th:text="${#temporals.format(
                         appt.appointmentTime,
                         'HH:mm dd/MM/yyyy'
                     )}">
-                    </span>
+                        </span>
 
-                </td>
+                    </td>
 
-                <td th:text="${appt.note != null ? appt.note : 'Không có ghi chú'}">
-                </td>
+                    <td th:text="${appt.note != null ? appt.note : 'Không có ghi chú'}">
+                    </td>
 
-                <td>
+                    <td>
 
-                    <span class="badge badge-warning"
-                          th:text="${appt.status}">
-                    </span>
+                        <span class="badge badge-warning"
+                              th:text="${appt.status}">
+                        </span>
 
-                </td>
+                    </td>
 
-                <td>
+                    <td>
 
-                    <a th:href="@{/doctor/diagnosis/{id}(id=${appt.id})}"
-                       class="btn btn-accept btn-sm">
+                        <a th:href="@{/doctor/diagnosis/{id}(id=${appt.id})}"
+                           class="btn btn-accept btn-sm">
 
-                        Tiếp nhận
+                            Tiếp nhận
 
-                    </a>
+                        </a>
 
-                </td>
+                    </td>
 
-            </tr>
+                </tr>
 
-            </tbody>
+                </tbody>
 
-        </table>
+            </table>
+
+        </div>
 
     </div>
 
-</div>
+</main>
 
 <div th:replace="fragments/footer :: footer"></div>
 

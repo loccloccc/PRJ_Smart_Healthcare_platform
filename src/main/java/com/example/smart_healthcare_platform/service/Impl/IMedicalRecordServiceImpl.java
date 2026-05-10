@@ -15,7 +15,7 @@ public class IMedicalRecordServiceImpl implements IMedicalRecordService {
     private final IMedicalRecordRepository  medicalRecordRepository;
     @Override
     public List<MedicalRecord> getMedicalRecordsByPatient(User patient) {
-        return medicalRecordRepository.findByAppointment_Patient(patient);
+        return medicalRecordRepository.findByAppointmentPatient(patient);
     }
 
     @Override

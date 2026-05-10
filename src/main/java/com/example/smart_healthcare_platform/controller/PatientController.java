@@ -43,28 +43,6 @@ public class PatientController {
         return "patient_home";
     }
 
-    @GetMapping("/patient/profile")
-    public String patientProfile(HttpSession session,
-                                 Model model) {
-
-        User user =
-                (User) session.getAttribute("userLogin");
-
-        if (user == null ||
-                !"PATIENT".equals(user.getRole())) {
-
-            return "redirect:/login";
-        }
-
-        UserProfiles profile =
-                userProfilesService.getUserProfilesByUser(user);
-
-        model.addAttribute("userLogin", user);
-
-        model.addAttribute("userProfiles", profile);
-
-        return "profile";
-    }
 
     @GetMapping("/patient/booking")
     public String patientBook(HttpSession session,
@@ -456,5 +434,13 @@ public class PatientController {
         );
 
         return "redirect:/patient/list";
+    }
+
+
+
+
+    @GetMapping("/patient/support")
+    public String patientSupport() {
+        return "support_consult";
     }
 }

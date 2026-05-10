@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <title>Quản lý bác sĩ - Admin</title>
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background: #f4f6f9;
+            font-family: Arial;
+        }
+
+        .box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            color: #0c56d0;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn-edit {
+            background: orange;
+            color: white;
+            border-radius: 20px;
+        }
+
+        .btn-del {
+            background: red;
+            color: white;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2 class="title">QUẢN LÝ BÁC SĨ</h2>
+
+<div class="container box">
+
+    <table class="table table-bordered">
+
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Họ tên</th>
+            <th>SĐT</th>
+            <th>Chuyên khoa</th>
+            <th>Hành động</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr>
+            <td>1</td>
+            <td>doctor_a</td>
+            <td>Nguyễn Văn A</td>
+            <td>0901111111</td>
+            <td>Tim mạch</td>
+            <td>
+                <button class="btn btn-edit">Sửa</button>
+                <button class="btn btn-del">Xóa</button>
+            </td>
+        </tr>
+
+        <tr>
+            <td>2</td>
+            <td>doctor_b</td>
+            <td>Trần Thị B</td>
+            <td>0902222222</td>
+            <td>Nội khoa</td>
+            <td>
+                <button class="btn btn-edit">Sửa</button>
+                <button class="btn btn-del">Xóa</button>
+            </td>
+        </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</body>
+</html>
