@@ -1,11 +1,14 @@
 package com.example.smart_healthcare_platform.controller;
 
 import com.example.smart_healthcare_platform.dto.MedicineDTO;
+import com.example.smart_healthcare_platform.model.Doctor;
 import com.example.smart_healthcare_platform.model.Medicine;
 import com.example.smart_healthcare_platform.model.User;
 import com.example.smart_healthcare_platform.model.UserProfiles;
+import com.example.smart_healthcare_platform.service.IDoctorService;
 import com.example.smart_healthcare_platform.service.IMedicineService;
 import com.example.smart_healthcare_platform.service.IUserProfilesService;
+import com.example.smart_healthcare_platform.service.IUserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
     private final IMedicineService medicineService;
     private final IUserProfilesService  userProfilesService;
+    private final IUserService userService;
+    private final IDoctorService doctorService;
 
     @GetMapping("/admin/home")
     public String adminHome(HttpSession session , Model model) {
@@ -85,7 +90,6 @@ public class AdminController {
             model.addAttribute("formAction", "/admin/editMedicine");
             return "admin_add_medicine";
         }
-
         Medicine medicine = new Medicine();
         medicine.setId(medicineDTO.getId());
         medicine.setName(medicineDTO.getName());
@@ -93,7 +97,6 @@ public class AdminController {
         medicine.setUnit(medicineDTO.getUnit());
         medicine.setPrice(medicineDTO.getPrice());
         medicine.setDescription(medicineDTO.getDescription());
-
         medicineService.updateMedicine(medicine);
         return "redirect:/admin/medicines";
     }
@@ -103,6 +106,26 @@ public class AdminController {
     public String deleteMedicine(@PathVariable Long id) {
         medicineService.deleteMedicine(id);
         return "redirect:/admin/medicines";
+    }
+
+    @GetMapping("/admin/doctors")
+    public String doctors(Model model,HttpSession session) {
+        model.addAttribute("user",userService.getUsers());
+        model.addAttribute("userProfiles",userProfilesService.getUserProfiles().stream().filter(
+                u -> u.getUser().getRole().equals("DOCTOR")
+        ));
+        User user = (User) session.getAttribute("userLogin");
+        Doctor doctor = doctorService.findDoctorById(user);
+        model.addAttribute("doctor",doctor);
+        return "admin_doctor_manage";
+    }
+    @GetMapping("/admin/patients")
+    public String patients(Model model) {
+        model.addAttribute("user",userService.getUsers());
+        model.addAttribute("userProfiles",userProfilesService.getUserProfiles().stream().filter(
+                u -> u.getUser().getRole().equals("PATIENT")
+        ));
+        return "admin_patients_manage";
     }
 
 }

@@ -24,21 +24,14 @@ public class DoctorController {
     private final IMedicalRecordService medicalRecordService;
     private final IUserProfilesService  userProfilesService;
 
-    // ================= HOME =================
     @GetMapping("/doctor/home")
     public String doctorHome(HttpSession session, Model model) {
-
         User user = (User) session.getAttribute("userLogin");
-
         if (user == null || !"DOCTOR".equals(user.getRole())) {
             return "redirect:/login";
         }
-
         Doctor doctor = doctorService.findDoctorById(user);
-
-        List<Appointment> allAppointments =
-                appointmentService.getAppointmentsByDoctor(doctor);
-
+        List<Appointment> allAppointments = appointmentService.getAppointmentsByDoctor(doctor);
         List<Appointment> todayAppointments =
                 allAppointments.stream()
                         .filter(a ->
@@ -49,90 +42,41 @@ public class DoctorController {
                         )
                         .toList();
 
-        long pendingAppointments =
-                todayAppointments.stream()
-                        .filter(a ->
-                                "PENDING".equalsIgnoreCase(a.getStatus())
-                        )
+        long pendingAppointments = todayAppointments.stream()
+                        .filter(a -> "PENDING".equalsIgnoreCase(a.getStatus()))
+                        .count();
+        long completedTasks = todayAppointments.stream()
+                        .filter(a -> "COMPLETED".equalsIgnoreCase(a.getStatus()))
                         .count();
 
-        long completedTasks =
+        model.addAttribute("appointments",
                 todayAppointments.stream()
-                        .filter(a ->
-                                "COMPLETED".equalsIgnoreCase(a.getStatus())
-                        )
-                        .count();
-
-        model.addAttribute(
-                "appointments",
-                todayAppointments.stream()
-                        .filter(a ->
-                                "PENDING".equalsIgnoreCase(a.getStatus())
-                        )
+                        .filter(a -> "PENDING".equalsIgnoreCase(a.getStatus()))
                         .toList()
         );
 
-        model.addAttribute(
-                "pendingAppointments",
-                pendingAppointments
-        );
-
-        model.addAttribute(
-                "urgentTasks",
-                pendingAppointments
-        );
-
-        model.addAttribute(
-                "completedTasks",
-                completedTasks
-        );
-
-        model.addAttribute(
-                "today",
-                LocalDate.now()
-        );
-
-        model.addAttribute(
-                "userLogin",
-                user
-        );
-
+        model.addAttribute("pendingAppointments", pendingAppointments);
+        model.addAttribute("urgentTasks", pendingAppointments);
+        model.addAttribute("completedTasks", completedTasks);
+        model.addAttribute("today", LocalDate.now());
+        model.addAttribute("userLogin", user);
         return "doctor_home";
     }
 
-    // ================= PATIENT LIST =================
     @GetMapping("/doctor/patients")
     public String doctorPatients(
             HttpSession session,
             Model model
     ) {
-
-        User user =
-                (User) session.getAttribute("userLogin");
-
-        if (user == null ||
-                !"DOCTOR".equals(user.getRole())) {
-
+        User user = (User) session.getAttribute("userLogin");
+        if (user == null || !"DOCTOR".equals(user.getRole())) {
             return "redirect:/login";
         }
-
-        Doctor doctor =
-                doctorService.findDoctorById(user);
-
-        List<Appointment> appointments =
-                appointmentService
+        Doctor doctor = doctorService.findDoctorById(user);
+        List<Appointment> appointments = appointmentService
                         .getAppointmentsByDoctor(doctor)
                         .stream()
-
-                        // chỉ lấy pending
-                        .filter(a ->
-                                "PENDING"
-                                        .equalsIgnoreCase(
-                                                a.getStatus()
-                                        )
-                        )
-
-                        // chỉ lấy từ hôm nay trở đi
+                        .filter(a -> "PENDING".equalsIgnoreCase(a.getStatus()))
                         .filter(a ->
                                 a.getAppointmentTime() != null
                                         &&
@@ -143,305 +87,126 @@ public class DoctorController {
 
                         .sorted((a1, a2) ->
                                 a1.getAppointmentTime()
-                                        .compareTo(
-                                                a2.getAppointmentTime()
-                                        )
-                        )
-
-                        .toList();
-
-        model.addAttribute(
-                "appointments",
-                appointments
-        );
-
-        model.addAttribute(
-                "today",
-                LocalDate.now()
-        );
-
-        model.addAttribute(
-                "userLogin",
-                user
-        );
-
+                                        .compareTo(a2.getAppointmentTime())
+                        ).toList();
+        model.addAttribute("appointments", appointments);
+        model.addAttribute("today", LocalDate.now());
+        model.addAttribute("userLogin", user);
         return "doctor_patients";
     }
-    // ================= DIAGNOSIS =================
+
     @GetMapping("/doctor/diagnosis/{id}")
     public String doctorDiagnosis(
             @PathVariable Long id,
             HttpSession session,
             Model model
     ) {
-
         User user = (User) session.getAttribute("userLogin");
-
         if (user == null || !"DOCTOR".equals(user.getRole())) {
             return "redirect:/login";
         }
-
-        Appointment appointment =
-                appointmentService.getAppointmentById(id);
-
+        Appointment appointment = appointmentService.getAppointmentById(id);
         if (appointment == null) {
             return "redirect:/doctor/patients";
         }
-
-        // check doctor ownership
-        if (!appointment.getDoctor()
-                .getUser()
-                .getId()
-                .equals(user.getId())) {
-
+        if (!appointment.getDoctor().getUser().getId().equals(user.getId())) {
             return "redirect:/doctor/patients";
         }
-
         model.addAttribute("appointment", appointment);
-
-        model.addAttribute(
-                "medicines",
-                medicineService.getAllMedicines()
-        );
-
+        model.addAttribute("medicines", medicineService.getAllMedicines());
         model.addAttribute("userLogin", user);
-
         return "doctor_diagnosis_receive";
     }
-
-    // ================= SAVE + CORE-08 =================
     @Transactional
     @PostMapping("/doctor/diagnosis/save")
     public String saveDiagnosis(
-
             @RequestParam Long appointmentId,
-
             @RequestParam String symptoms,
-
             @RequestParam String diagnosis,
-
             @RequestParam(required = false)
             String result,
-
             @RequestParam List<Long> medicineIds,
-
             @RequestParam List<Integer> quantities,
-
             @RequestParam List<String> dosages,
-
             HttpSession session,
-
             Model model
     ) {
-
-        User user =
-                (User) session.getAttribute("userLogin");
-
-        if (user == null ||
-                !"DOCTOR".equals(user.getRole())) {
-
+        User user = (User) session.getAttribute("userLogin");
+        if (user == null || !"DOCTOR".equals(user.getRole())) {
             return "redirect:/login";
         }
-
-        Appointment appointment =
-                appointmentService.getAppointmentById(
-                        appointmentId
-                );
-
+        Appointment appointment = appointmentService.getAppointmentById(appointmentId);
         if (appointment == null) {
-
             return "redirect:/doctor/patients";
         }
-
-        model.addAttribute(
-                "appointment",
-                appointment
-        );
-
-        model.addAttribute(
-                "medicines",
-                medicineService.getAllMedicines()
-        );
-
-        // giữ lại dữ liệu cũ
+        model.addAttribute("appointment", appointment);
+        model.addAttribute("medicines", medicineService.getAllMedicines());
         model.addAttribute("symptoms", symptoms);
         model.addAttribute("diagnosis", diagnosis);
         model.addAttribute("resultValue", result);
-
-        // ================= VALIDATE =================
-
         boolean hasError = false;
-
-        // triệu chứng
-        if (symptoms == null ||
-                symptoms.trim().isEmpty()) {
-
-            model.addAttribute(
-                    "symptomsError",
-                    "Vui lòng nhập triệu chứng"
-            );
-
+        if (symptoms == null || symptoms.trim().isEmpty()) {
+            model.addAttribute("symptomsError", "Vui lòng nhập triệu chứng");
             hasError = true;
         }
-
-        // chẩn đoán
-        if (diagnosis == null ||
-                diagnosis.trim().isEmpty()) {
-
-            model.addAttribute(
-                    "diagnosisError",
-                    "Vui lòng nhập chẩn đoán"
-            );
-
+        if (diagnosis == null || diagnosis.trim().isEmpty()) {
+            model.addAttribute("diagnosisError", "Vui lòng nhập chẩn đoán");
             hasError = true;
         }
-
-        // phải có ít nhất 1 thuốc
         boolean hasMedicine = false;
-
         for (Integer qty : quantities) {
-
             if (qty != null && qty > 0) {
-
                 hasMedicine = true;
-
                 break;
             }
         }
-
         if (!hasMedicine) {
-
-            model.addAttribute(
-                    "medicineError",
-                    "Phải kê ít nhất 1 loại thuốc"
-            );
-
+            model.addAttribute("medicineError", "Phải kê ít nhất 1 loại thuốc");
             hasError = true;
         }
-
         if (hasError) {
-
             return "doctor_diagnosis_receive";
         }
-
-        // ================= CHECK STOCK =================
-
         for (int i = 0; i < medicineIds.size(); i++) {
-
-            Integer qty =
-                    quantities.get(i);
-
-            if (qty == null ||
-                    qty <= 0) {
-
-                continue;
-            }
-
-            Medicine medicine =
-                    medicineService.getMedicineById(
-                            medicineIds.get(i)
-                    );
-
+            Integer qty = quantities.get(i);
+            if (qty == null || qty <= 0) {continue;}
+            Medicine medicine = medicineService.getMedicineById(medicineIds.get(i));
             if (medicine.getStock() < qty) {
-
-                model.addAttribute(
-                        "error",
-                        "Không đủ thuốc: "
-                                + medicine.getName()
-                );
-
+                model.addAttribute("error", "Không đủ thuốc: " + medicine.getName());
                 return "doctor_diagnosis_receive";
             }
         }
-
-        // ================= MEDICAL RECORD =================
-
-        MedicalRecord record =
-                new MedicalRecord();
-
+        MedicalRecord record = new MedicalRecord();
         record.setAppointment(appointment);
-
         record.setSymptoms(symptoms);
-
         record.setDiagnosis(diagnosis);
-
         record.setResult(result);
-
-        record.setCreatedAt(
-                LocalDateTime.now()
-        );
-
+        record.setCreatedAt(LocalDateTime.now());
         medicalRecordService.save(record);
-
-        // ================= PRESCRIPTION =================
-
-        Prescription prescription =
-                new Prescription();
-
+        Prescription prescription = new Prescription();
         prescription.setMedicalRecord(record);
-
         prescription.setStatus("DISPENSED");
-
-        prescription.setCreatedAt(
-                LocalDateTime.now()
-        );
-
-        List<PrescriptionDetail> details =
-                new ArrayList<>();
-
-        // ================= SAVE MEDICINES =================
-
+        prescription.setCreatedAt(LocalDateTime.now());
+        List<PrescriptionDetail> details = new ArrayList<>();
         for (int i = 0; i < medicineIds.size(); i++) {
-
-            Integer qty =
-                    quantities.get(i);
-
-            if (qty != null &&
-                    qty > 0) {
-
-                Medicine medicine =
-                        medicineService.getMedicineById(
-                                medicineIds.get(i)
-                        );
-
-                // trừ kho
-                medicine.setStock(
-                        medicine.getStock() - qty
-                );
-
+            Integer qty = quantities.get(i);
+            if (qty != null && qty > 0) {
+                Medicine medicine = medicineService.getMedicineById(medicineIds.get(i));
+                medicine.setStock(medicine.getStock() - qty);
                 medicineService.saveMedicine(medicine);
-
-                PrescriptionDetail detail =
-                        new PrescriptionDetail();
-
+                PrescriptionDetail detail = new PrescriptionDetail();
                 detail.setPrescription(prescription);
-
                 detail.setMedicine(medicine);
-
                 detail.setQuantity(qty);
-
-                detail.setDosage(
-                        dosages.get(i)
-                );
-
+                detail.setDosage(dosages.get(i));
                 details.add(detail);
             }
         }
-
         prescription.setDetails(details);
-
         record.setPrescription(prescription);
-
-        // ================= COMPLETE =================
-
         appointment.setStatus("COMPLETED");
-
-        appointment.setNote(
-                "Đã khám và cấp thuốc"
-        );
-
+        appointment.setNote("Đã khám và cấp thuốc");
         appointmentService.save(appointment);
-
         return "redirect:/doctor/patients";
     }
 }

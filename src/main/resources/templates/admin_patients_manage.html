@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Quản lý bệnh nhân</title>
@@ -43,11 +43,16 @@
 </head>
 
 <body>
-
+<div th:replace="fragments/header :: header"></div>
 <div class="container container-box">
-
     <h3 class="title">🧑‍🤝‍🧑 Quản lý bệnh nhân</h3>
+    <!-- THÊM NÚT -->
+    <div class="container mt-3 mb-3">
+        <a th:href="@{/admin/home}" class="btn btn-primary">
+            ← Quay lại trang chủ
+        </a>
 
+    </div>
     <table class="table table-bordered table-hover">
 
         <thead>
@@ -57,41 +62,21 @@
             <th>SĐT</th>
             <th>Giới tính</th>
             <th>Địa chỉ</th>
-            <th>Thao tác</th>
         </tr>
         </thead>
-
         <tbody>
-
-        <tr>
-            <td>1</td>
-            <td>Nguyễn Văn C</td>
-            <td>0901111111</td>
-            <td>Nam</td>
-            <td>Hà Nội</td>
-            <td>
-                <button class="btn btn-view btn-action">Xem</button>
-                <button class="btn btn-lock btn-action">Khóa</button>
-            </td>
+        <tr th:each="u , start : ${userProfiles}">
+            <td th:text="${start.count}">1</td>
+            <td th:text="${u.fullName}">Nguyễn Văn C</td>
+            <td th:text="${u.phone}">0901111111</td>
+            <td th:text="${u.gender}">Nam</td>
+            <td th:text="${u.address}">Hà Nội</td>
         </tr>
-
-        <tr>
-            <td>2</td>
-            <td>Trần Thị D</td>
-            <td>0902222222</td>
-            <td>Nữ</td>
-            <td>Đà Nẵng</td>
-            <td>
-                <button class="btn btn-view btn-action">Xem</button>
-                <button class="btn btn-lock btn-action">Khóa</button>
-            </td>
-        </tr>
-
         </tbody>
 
     </table>
 
 </div>
-
+<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>
